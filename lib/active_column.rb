@@ -1,4 +1,4 @@
-require 'cassandra/0.7'
+require 'cassandra'
 require 'benchmark'
 require 'yaml'
 
