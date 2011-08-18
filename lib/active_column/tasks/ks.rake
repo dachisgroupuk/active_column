@@ -85,9 +85,22 @@ namespace :ks do
 
   namespace :test do
     desc 'Load the development schema in to the test keyspace'
-    task :prepare => :configure do
-      schema_dump :development
-      schema_load :test
+#    task :prepare => :configure do
+#      schema_dump :development
+#      schema_load :test
+#    end
+    task :prepare do
+      ENV['RAILS_ENV'] = "test"
+      config = @configs['test']
+
+      puts "dropping keyspace #{config['keyspace']}"
+      ActiveColumn::Tasks::Keyspace.new.drop config['keyspace']
+      puts "recreating keyspace #{config['keyspace']}"
+      ks = ActiveColumn::Tasks::Keyspace.new.create config['keyspace'], config
+      puts "created keyspace #{ks.name}"
+      set_keyspace
+      puts "running migrations for #{config['keyspace']}" 
+      ActiveColumn::Migrator.migrate ActiveColumn::Migrator.migrations_path, nil
     end
   end
 
