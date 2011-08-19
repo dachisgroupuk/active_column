@@ -91,6 +91,7 @@ namespace :ks do
 #    end
     task :prepare do
       ENV['RAILS_ENV'] = "test"
+      configure
       config = @configs['test']
 
       puts "dropping keyspace #{config['keyspace']}"
